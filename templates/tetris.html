@@ -56,23 +56,11 @@ space: toggle pause/play
         <div class="modal-body">
           <div class="input-group">
             <div class="form-group has-error">
-              <label class="control-label error-hidden" for="tetris-alias" id="error-alias">Enter a valid alias</label>
-              <input type="text" class="form-control-sm" id="tetris-alias" placeholder="Alias">
+              <label class="control-label info-hidden" for="tetris-gid" id="info-gid">Call this number: 404-418-8189 and enter the following game id</label>
+              <input type="text" class="form-control-sm info-hidden" id="tetris-gid">
             </div>
             
-            <div class="radio">
-              <label>
-                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-                Single Player
-              </label>
-            </div>
-            <div class="radio">
-              <label>
-                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                Multi Player
-              </label>
-            </div>
-            <button type="button" id="tetris-play" class="btn btn-sm btn-primary" data-loading-text="looking for players...">Play!</button>
+            <button type="button" id="tetris-play" class="btn btn-sm btn-primary" data-loading-text="waiting for your call...">Play!</button>
           </div>
         </div>
         <div class="modal-footer">

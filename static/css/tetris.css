@@ -12,11 +12,11 @@ div.score {
   color: white;
 }
 
-label.error-hidden {
+label.info-hidden {
   display: none;
 }
 
-label.error-visible {
+label.info-visible {
   display: block
 }
 

@@ -398,80 +398,44 @@ Tetris.prototype.tick = function() {
 };
 
 
-var handleGameOptions = function(socket){
+var handleGameOptions = function(gid,socket){
   var multi;
-  if($('#tetris-alias').val().trim() == "") {
-    $('#error-alias').removeClass('error-hidden')
-                     .addClass('error-visible');
-    return;
-  }
-    
-  socket.on('login',function(data){
-    console.log('logged in with id: '+data.id+" and partner id: "+data.partner+" and pieces: "+data.pieces);
+  $('#info-gid').removeClass('info-hidden')
+                .addClass('info-visible');  
+  $('#tetris-gid').removeClass('info-hidden')
+                  .addClass('info-visible');  
+  $('#tetris-gid').val(gid);  
+  socket.emit('start');
+  socket.on('start',function(){
+    console.log('starting.. ');
     $('#tetris-play').button('reset')
-
     $('#myModal').modal('hide'); 
-    multi = false;
-    if(data.partner != -1) {
-      multi= true;
-    }
-    game(multi,data.pieces,socket);
+    game(socket);
   });
 
-  if($('#optionsRadios2').prop('checked')) {
-    $('#tetris-play').button('loading')
-    socket.emit('login',{'multi':true})
-  }
-  else {
-    socket.emit('login',{'multi':false}) 
-  }
-};
+ };
 
-var game = function(multi,pieces,socket) {
+var game = function(socket) {
   t = new Tetris();
   t.board = t.makeBoard(t.width,t.height);
-  if(multi) {
-    t.randPieces = pieces;
-    s = new Tetris({'boardId':2})
-    s.board = s.makeBoard(s.width,s.height);
-    s.initRender();
-    t.secondPlayer = s;
-  }
   t.initRender();
-  t.clock = setInterval(function(){
-    t.tick();
-    console.log('emitting sync')
-    ret = socket.emit('sync',{"board":t.board,"score":t.score,"nextIndex":t.nextIndex});
-    if(multi) {
-      socket.on('sync', function(data){
-        data = JSON.parse(data.partnerData);
-        s.board = data.board;
-        s.nextIndex = data.nextIndex;
-        s.score = data.score;
-        s.renderBoard();
-        s.nextPrender();
-        s.scoreRender();
-      });
-    }
-  },t.interval)
-  t.renderBoard();
-  //Key handlers:
-  $(document).keydown(function(e){
+    //Key handlers:
+  socket.on('move',function(dir){
         var test;
         e.preventDefault();
-        if (e.keyCode == 32) { 
+        if (dir == '5') { 
           t.pausePlay();
         }
-        if (e.keyCode == 37) { 
+        if (dir == '4') { 
           test =  t.move('left');
         }
-        if (e.keyCode == 38) { 
+        if (dir == '2') { 
           test = t.rotate(t.currentPiece);
         }
-        if (e.keyCode == 39) { 
+        if (dir == '6') { 
           test = t.move('right')
         }
-        if (e.keyCode == 40) { 
+        if (dir == '8') { 
           test = t.move('down');
         }
         if(test) {
@@ -479,6 +443,12 @@ var game = function(multi,pieces,socket) {
           t.renderBoard();
         }
   });
+  t.clock = setInterval(function(){
+    t.tick();
+    console.log('emitting sync')
+    ret = socket.emit('move');
+  },t.interval)
+
 
 }
 
@@ -488,17 +458,17 @@ $(document).ready(function() {
   $('#closemodal').click(function(){
     $('#myModal').modal('hide'); 
   });
-  $('#tetris-alias').click(function(){
-    $('#error-alias').removeClass('error-visible')
-                     .addClass('error-hidden'); 
-  });
   $('#myModal').modal(); 
   $('#tetris-play').click(function(){
     socket = io.connect('/players'); 
-    socket.on('connect',function(data){
+    socket.on('connect',function(){
       console.log('player connected');
     });
-    handleGameOptions(socket);
+    socket.on('login',function(gid){
+      $('#tetris-play').button('loading')
+      handleGameOptions(gid,socket);
+    });
+    socket.emit('login');
   });
 });
 
