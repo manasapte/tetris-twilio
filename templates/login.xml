@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Gather action="/start" method="GET"  timeout="10" finishOnKey="*">
+        <Say>Please enter your game id and then press star.</Say>
+    </Gather>
+</Response>

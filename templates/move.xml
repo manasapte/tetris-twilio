@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Gather action="/move" method="GET" timeout="10" numDigits="1">
+        <Say>move</Say>
+    </Gather>
+</Response>
