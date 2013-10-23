@@ -12,7 +12,9 @@ class PlayersNamespace(BaseNamespace):
 
 
   def on_move(self):
-
+    move = r.rpop('move_'+str(self.id))
+    if move is not None:
+      self.emit('move',move)
     
   def on_start(self):
     r.get(self.id,data)
