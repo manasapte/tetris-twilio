@@ -17,12 +17,12 @@ class PlayersNamespace(BaseNamespace):
       self.emit('move',move)
     
   def on_start(self):
-    r.get(self.id,data)
     self.ps.subscribe([self.id])
-      for item in self.ps.listen():
-        print 'got an item from listen'+str(item)
-        if(item.get('type') == 'message'):
-          if item.get('data') == self.id
+    for item in self.ps.listen():
+      print 'got an item from listen'+str(item)
+      if(item.get('type') == 'message'):
+        print "item data: "+str(item.get)
+        if item.get('data') == self.id:
           self.emit('start')
           break
   
@@ -30,6 +30,7 @@ class PlayersNamespace(BaseNamespace):
     try:
       self.id = r.get('sessionid')
       r.incr('sessionid')
+      print "logged in with id: "+str(self.id)
       self.emit('login',self.id)
     except:
       print "some exception"

@@ -400,10 +400,8 @@ Tetris.prototype.tick = function() {
 
 var handleGameOptions = function(gid,socket){
   var multi;
-  $('#info-gid').removeClass('info-hidden')
-                .addClass('info-visible');  
-  $('#tetris-gid').removeClass('info-hidden')
-                  .addClass('info-visible');  
+  $('#info-gid').show()
+  $('#tetris-gid').show()
   $('#tetris-gid').val(gid);  
   socket.emit('start');
   socket.on('start',function(){
@@ -421,8 +419,8 @@ var game = function(socket) {
   t.initRender();
     //Key handlers:
   socket.on('move',function(dir){
+        console.log('in on move and dir: '+dir);
         var test;
-        e.preventDefault();
         if (dir == '5') { 
           t.pausePlay();
         }
@@ -455,6 +453,8 @@ var game = function(socket) {
 
 $(document).ready(function() {
   var socket;
+  $('#info-gid').hide()
+  $('#tetris-gid').hide()
   $('#closemodal').click(function(){
     $('#myModal').modal('hide'); 
   });
